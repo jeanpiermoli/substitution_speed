@@ -1,0 +1,201 @@
+/* ==========================================================================
+   CHART & VISUALIZATION STYLES - DINÁMICA DE SISTEMAS INTERPERSONALES
+   ========================================================================== */
+
+.chart-viewport {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  background: var(--bg-abyssal);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.chart-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Ensure canvases sit beneath panel cards by default */
+.chart-canvas {
+  position: relative;
+  z-index: 0;
+}
+
+/* If a canvas needs to appear above content (rare), use .chart-canvas--front */
+.chart-canvas--front {
+  z-index: 1;
+}
+
+/* Barra de Herramientas y Filtros de Capas de la Gráfica */
+.chart-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem;
+}
+
+.layer-toggles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.layer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition-fast);
+}
+
+.layer-pill:hover {
+  border-color: var(--glass-border-hover);
+  color: var(--text-primary);
+}
+
+.layer-pill.active {
+  background: var(--bg-surface-elevated);
+  border-color: var(--accent-blue-border);
+  color: var(--text-primary);
+}
+
+.layer-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.ind-carencia { background: var(--term-carencia); }
+.ind-saturacion { background: var(--term-saturacion); }
+.ind-friccion { background: var(--term-friccion); }
+.ind-heaviside { background: var(--term-heaviside); }
+.ind-integral { background: #38bdf8; }
+
+/* Leyenda de Zonas Inferiores */
+.zone-legend-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .zone-legend-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.zone-legend-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  border-left: 3px solid;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.zone-legend-item.neglect {
+  border-left-color: var(--zone-neglect);
+}
+
+.zone-legend-item.optimal {
+  border-left-color: var(--zone-optimal-bright);
+}
+
+.zone-legend-item.fatigue {
+  border-left-color: var(--zone-fatigue);
+}
+
+.zone-legend-item.collapse {
+  border-left-color: var(--zone-collapse-bright);
+}
+
+.zone-item-title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.zone-item-range {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Controles Especiales del Modo Integral */
+.integral-controls-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+  background: var(--bg-abyssal);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+}
+
+@media (max-width: 600px) {
+  .integral-controls-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.integral-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.integral-input-group label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.integral-field {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border-hover);
+  border-radius: var(--radius-sm);
+  color: var(--accent-blue);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  padding: 0.4rem 0.6rem;
+  outline: none;
+}
+
+.integral-field:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+}
+
+/* Tarjetas de Resultados Matemáticos en Modo Derivada e Integral */
+.math-metric-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.math-metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
