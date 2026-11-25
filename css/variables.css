@@ -1,87 +1,96 @@
 /* ==========================================================================
-   DINÁMICA DE SISTEMAS INTERPERSONALES - DESIGN SYSTEM TOKENS
-   Paleta Seleccionada: Titanio & Azul Nórdico (Colores Fríos de Laboratorio)
-   Autor: Jan Pier Molina Castaño (Universidad de La Guajira, 2026)
+   DINÁMICA DE SISTEMAS INTERPERSONALES - SISTEMA DE DISEÑO
+   Paleta Estricta: 2 Colores Base (Fondo + Superficie/Neutro) + 1 Acento Suave
+   Modos: Oscuro (por defecto) y Claro
    ========================================================================== */
 
 :root {
-  /* --- Fondos Base (Fríos & Profundos) --- */
-  --bg-abyssal: #0a0f1d;
-  --bg-slate: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-surface-elevated: #243248;
-  --bg-surface-hover: #2d3d57;
-  --bg-overlay: rgba(15, 23, 42, 0.75);
+  /* --- MODO OSCURO (Default) --- */
+  /* Base 1: Fondo General (Carbón Mate Suave) */
+  --bg-base: #12151a;
+  --bg-overlay: rgba(18, 21, 26, 0.85);
 
-  /* --- Vidrio Esmerilado (Glassmorphism Muteado) --- */
-  --glass-bg: rgba(30, 41, 59, 0.65);
-  --glass-border: rgba(148, 163, 184, 0.12);
-  --glass-border-hover: rgba(148, 163, 184, 0.28);
-  --glass-blur: blur(14px);
+  /* Base 2: Superficies, Tarjetas, Bordes y Escala Tipográfica */
+  --bg-surface: #1a1e26;
+  --bg-surface-elevated: #222732;
+  --bg-surface-hover: #29303d;
+  --border-subtle: #272d38;
+  --border-hover: #373f4e;
 
-  /* --- Tipografía y Contraste Editorial --- */
-  --text-primary: #f1f5f9;      /* Platino Escandinavo */
-  --text-secondary: #94a3b8;    /* Gris Acero Mate */
-  --text-muted: #64748b;        /* Gris Plomo Atenuado */
-  --text-inverse: #0f172a;
+  --text-primary: #e4e7ed;
+  --text-secondary: #9098a6;
+  --text-muted: #5e6675;
+  --text-inverse: #12151a;
 
-  /* --- Acento Principal Matemático (Azul Acero Ártico Desaturado) --- */
-  --accent-blue: #38bdf8;
-  --accent-blue-subdued: #0284c7;
-  --accent-blue-tint: rgba(56, 189, 248, 0.12);
-  --accent-blue-border: rgba(56, 189, 248, 0.35);
+  /* Color 3: Acento Único (Azul Nórdico Suave y Desaturado) */
+  --accent: #5b8ea8;
+  --accent-hover: #6ea0ba;
+  --accent-tint: rgba(91, 142, 168, 0.12);
+  --accent-border: rgba(91, 142, 168, 0.30);
+  --accent-contrast: #ffffff;
 
-  /* --- Zonas de Calibración Afectiva (Colores Fríos Específicos del Paper) --- */
-  /* 1. Zona de Negligencia / Déficit */
-  --zone-neglect: #b45309;           /* Ocre Cenizo Frío */
-  --zone-neglect-bg: rgba(180, 83, 9, 0.14);
-  --zone-neglect-border: rgba(180, 83, 9, 0.40);
+  /* Aliases para Canvas y Motores de Gráfico (Monocromo + Acento) */
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-axis: rgba(255, 255, 255, 0.20);
+  --chart-curve: #5b8ea8;
+  --chart-area: rgba(91, 142, 168, 0.16);
+  --chart-node: #5b8ea8;
+  --chart-node-ring: rgba(91, 142, 168, 0.35);
 
-  /* 2. Zona de Equilibrio Elástico Óptimo (x = 4) */
-  --zone-optimal: #2e7d68;           /* Verde Salvia Frío / Eucalipto */
-  --zone-optimal-bright: #38a169;
-  --zone-optimal-bg: rgba(46, 125, 104, 0.15);
-  --zone-optimal-border: rgba(46, 125, 104, 0.45);
-
-  /* 3. Zona de Fatiga por Sobreinversión */
-  --zone-fatigue: #c2410c;           /* Teja Frío */
-  --zone-fatigue-bg: rgba(194, 65, 12, 0.14);
-  --zone-fatigue-border: rgba(194, 65, 12, 0.40);
-
-  /* 4. Zona de Colapso Estructural por Asfixia (Heaviside x >= 8) */
-  --zone-collapse: #9f1239;          /* Carmesí Óxido Mate */
-  --zone-collapse-bright: #be123c;
-  --zone-collapse-bg: rgba(159, 18, 57, 0.16);
-  --zone-collapse-border: rgba(159, 18, 57, 0.50);
-
-  /* --- Sumandos de la Ecuación --- */
-  --term-carencia: #38bdf8;          /* Carencia 25/(x+1) */
-  --term-saturacion: #818cf8;        /* Saturación lineal x */
-  --term-friccion: #a78bfa;          /* Fricción sinusoidal 0.5 sin(pi*x) */
-  --term-heaviside: #f43f5e;         /* Escalón 5H(x-8) */
-
-  /* --- Tipografía --- */
+  /* Tipografía */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-heading: 'Outfit', var(--font-sans);
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* --- Espaciados & Geometría --- */
+  /* Geometría y Espaciado */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
-  --radius-xl: 20px;
   --radius-pill: 9999px;
 
-  /* --- Sombras de Precisión --- */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.55);
-  --shadow-glow-blue: 0 0 20px rgba(56, 189, 248, 0.2);
-  --shadow-glow-optimal: 0 0 20px rgba(46, 125, 104, 0.25);
-  --shadow-glow-collapse: 0 0 20px rgba(159, 18, 57, 0.3);
+  /* Sombras Mate Sutiles (Cero hostigamiento) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.35);
 
-  /* --- Transiciones --- */
+  /* Transición */
   --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.22s ease;
+}
+
+/* --- MODO CLARO --- */
+[data-theme="light"] {
+  /* Base 1: Fondo General (Papel Suave Mate) */
+  --bg-base: #f6f7f9;
+  --bg-overlay: rgba(246, 247, 249, 0.88);
+
+  /* Base 2: Superficies, Tarjetas, Bordes y Escala Tipográfica */
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f0f2f5;
+  --bg-surface-hover: #e8ebf0;
+  --border-subtle: #dde1e7;
+  --border-hover: #caced8;
+
+  --text-primary: #181b20;
+  --text-secondary: #575e6c;
+  --text-muted: #8b92a0;
+  --text-inverse: #ffffff;
+
+  /* Color 3: Acento Único (Azul Nórdico Suave Desaturado en Fondo Claro) */
+  --accent: #3d6f88;
+  --accent-hover: #335e74;
+  --accent-tint: rgba(61, 111, 136, 0.08);
+  --accent-border: rgba(61, 111, 136, 0.25);
+  --accent-contrast: #ffffff;
+
+  /* Aliases para Canvas y Motores de Gráfico (Monocromo + Acento) */
+  --chart-grid: rgba(0, 0, 0, 0.05);
+  --chart-axis: rgba(0, 0, 0, 0.25);
+  --chart-curve: #3d6f88;
+  --chart-area: rgba(61, 111, 136, 0.14);
+  --chart-node: #3d6f88;
+  --chart-node-ring: rgba(61, 111, 136, 0.30);
+
+  /* Sombras Suaves */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.08);
 }

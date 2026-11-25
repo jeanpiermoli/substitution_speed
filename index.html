@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dinámica de Sistemas Interpersonales | Modelado Matemático de la Velocidad de Sustitución</title>
-  <meta name="description" content="Simulador interactivo y calculadora de la dinámica relacional basada en el paper de Jan Pier Molina Castaño (2026), Universidad de La Guajira.">
+  <title>Dinámica de Sistemas Interpersonales | Jan Pier Molina Castaño</title>
+  <meta name="description" content="Simulador interactivo del modelo matemático de velocidad de sustitución V(x) en relaciones interpersonales. Uniguajira 2026.">
   <meta name="author" content="Jan Pier Molina Castaño">
 
-  <!-- Fuentes de Alta Legibilidad -->
+  <!-- Fuentes Tipográficas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <!-- KaTeX para Renderizado Matemático Editorial (Cero signos de dólar) -->
+  <!-- KaTeX para Renderizado Matemático Limpio -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
@@ -24,16 +24,30 @@
 </head>
 <body>
 
+  <!-- Barra de Telemetría Rápida Móvil (Fija en Pantalla Pequeña) -->
+  <aside class="mobile-sticky-telemetry" id="mobile-sticky-telemetry" aria-label="Resumen rápido">
+    <div class="mobile-telemetry-inner">
+      <div class="mobile-stat">
+        <span class="mobile-stat-label">Esfuerzo x</span>
+        <span class="mobile-stat-val mono" id="mobile-live-x">4.00</span>
+      </div>
+      <div class="mobile-stat">
+        <span class="mobile-stat-label">Velocidad V(x)</span>
+        <span class="mobile-stat-val mono text-accent" id="mobile-live-v">9.00</span>
+      </div>
+      <div class="mobile-stat-badge">
+        <span class="status-badge" id="mobile-live-badge">Equilibrio Óptimo</span>
+      </div>
+    </div>
+  </aside>
+
   <div class="app-container">
     
-    <!-- ====================================================================
-         CABECERA SUPERIOR & WIDGET DEL AUTOR
-         ==================================================================== -->
+    <!-- CABECERA SUPERIOR -->
     <header class="app-header">
       <div class="brand-section">
         <div class="brand-icon" aria-hidden="true">
-          <!-- Icono SVG de Función Matemática & Engranaje Mecánico -->
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 12h3l2-7 4 14 3-9 2 4h4"/>
             <circle cx="18" cy="6" r="3" stroke-width="1.5"/>
           </svg>
@@ -41,506 +55,335 @@
         <div class="brand-info">
           <h1>Dinámica de Sistemas Interpersonales</h1>
           <div class="sub-tagline">
-            <span>Modelado Matemático de la Velocidad de Sustitución</span>
-            <span class="academic-badge">Ingeniería Mecánica • Uniguajira 2026</span>
+            <span>Modelo Matemático de la Velocidad de Sustitución</span>
+            <span class="academic-badge">Uniguajira 2026</span>
           </div>
         </div>
       </div>
 
-      <!-- Widget del Autor con Acceso Directo a Instagram -->
-      <div class="author-header-widget">
-        <div class="author-avatar-wrap">
-          <img id="author-header-avatar" class="author-avatar-img" src="assets/jean.png" alt="Foto de Jan Pier Molina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="author-avatar-fallback">JP</div>
-        </div>
-        <div class="author-meta">
-          <span class="author-name">Jan Pier Molina</span>
-          <span class="author-role">Autor de la Investigación</span>
-        </div>
-        <a href="https://www.instagram.com/jean.pieerr/" target="_blank" rel="noopener noreferrer" class="author-ig-btn" title="Ver perfil de Instagram de Jan Pier">
-          <!-- Icono Instagram -->
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      <!-- Acciones de Cabecera: Toggle de Tema & Autor -->
+      <div class="header-actions">
+        <!-- Botón Modo Oscuro / Claro -->
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar tema">
+          <svg class="theme-icon icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
           </svg>
-          <span>@jean.pieerr</span>
+          <svg class="theme-icon icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+        </button>
+
+        <!-- Enlace a Instagram del Autor -->
+        <a href="https://www.instagram.com/jean.pieerr/" target="_blank" rel="noopener noreferrer" class="author-header-link" title="Perfil de Jan Pier Molina">
+          <span class="author-avatar-fallback">JP</span>
+          <span class="author-name">@jean.pieerr</span>
         </a>
       </div>
     </header>
 
-    <!-- ====================================================================
-         BARRA DE NAVEGACIÓN ENTRE MODOS Y PESTAÑAS
-         ==================================================================== -->
-    <nav class="tabs-navigation" aria-label="Navegación de Modos">
+    <!-- BARRA DE NAVEGACIÓN DE MODOS -->
+    <nav class="tabs-navigation" aria-label="Navegación del simulador">
       <button class="tab-btn active" data-tab="velocity" id="tab-btn-velocity">
-        <svg class="icon-svg tab-icon-svg" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M19 9l-5 5-4-4-3 3"/></svg>
-        <span>1. Velocidad V(x)</span>
+        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M19 9l-5 5-4-4-3 3"/></svg>
+        <span>1. Simulador V(x)</span>
       </button>
       <button class="tab-btn" data-tab="derivative" id="tab-btn-derivative">
-        <svg class="icon-svg tab-icon-svg" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         <span>2. Aceleración V'(x)</span>
       </button>
       <button class="tab-btn" data-tab="integral" id="tab-btn-integral">
-        <svg class="icon-svg tab-icon-svg" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         <span>3. Desgaste Integral ΔD</span>
       </button>
-      <button class="tab-btn" data-tab="matrix" id="tab-btn-matrix">
-        <svg class="icon-svg tab-icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
-        <span>4. Matriz de Calibración</span>
-      </button>
       <button class="tab-btn" data-tab="paper" id="tab-btn-paper">
-        <svg class="icon-svg tab-icon-svg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <span>5. Paper & Autor</span>
+        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>4. Fundamentos & Autor</span>
       </button>
     </nav>
 
     <!-- ====================================================================
-         PESTAÑA 1: CALCULADORA PRINCIPAL DE VELOCIDAD V(x)
+         PESTAÑA 1: SIMULADOR PRINCIPAL DE VELOCIDAD V(x)
          ==================================================================== -->
     <main class="tab-panel active" id="tab-velocity">
       <div class="calculator-grid">
         
-        <!-- COLUMNA 1: CONTROLES DE ENTRADA & DESGLOSE DE SUMANDOS -->
-        <section class="panel-card" aria-label="Controles de Parámetros">
-          <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-              <span>Parámetro de Entrada</span>
-            </h2>
-            <span class="card-subtitle">Esfuerzo invertido</span>
-          </div>
+        <!-- COLUMNA IZQUIERDA: CONTROLES & DIAGNÓSTICO -->
+        <div class="calc-side-column">
 
-          <!-- Slider Continuo e Input Numérico -->
-          <div class="control-group">
-            <div class="slider-wrapper">
+          <!-- 1. Controles de Esfuerzo -->
+          <section class="panel-card" aria-label="Controles de Esfuerzo">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+                <span>Nivel de Esfuerzo Invertido (<span data-latex="x"></span>)</span>
+              </h2>
+              <div class="number-input-wrap">
+                <input type="number" id="effort-number-input" class="effort-number-input" min="0" max="9.99" step="0.05" value="4.00" aria-label="Valor numérico de esfuerzo">
+              </div>
+            </div>
+
+            <!-- Slider continuo grande -->
+            <div class="control-group">
+              <input type="range" id="effort-slider" class="effort-slider" min="0" max="9.99" step="0.05" value="4.0" aria-label="Control deslizante de esfuerzo">
               <div class="slider-labels">
                 <span>0.0 (Abandono)</span>
                 <span>4.0 (Óptimo)</span>
                 <span>8.0 (Heaviside)</span>
                 <span>10.0</span>
               </div>
-              <input type="range" id="effort-slider" class="effort-slider" min="0" max="9.99" step="0.05" value="4.0" aria-label="Nivel de esfuerzo">
             </div>
 
-            <div class="dual-input-row">
-              <span style="font-size: 0.85rem; color: var(--text-secondary);">Nivel exacto de esfuerzo (<span data-latex="x"></span>):</span>
-              <div class="number-input-wrap">
-                <input type="number" id="effort-number-input" class="effort-number-input" min="0" max="9.99" step="0.05" value="4.00" aria-label="Valor numérico de esfuerzo">
+            <!-- Presets Rápidos -->
+            <div class="presets-section">
+              <span class="section-label">Casos Típicos:</span>
+              <div class="presets-grid">
+                <button class="preset-btn" data-effort="1.0" type="button">
+                  <span class="preset-name">1. Negligencia</span>
+                  <span class="mono preset-val">x = 1.0</span>
+                </button>
+                <button class="preset-btn active" data-effort="4.0" type="button">
+                  <span class="preset-name">2. Equilibrio</span>
+                  <span class="mono preset-val">x = 4.0</span>
+                </button>
+                <button class="preset-btn" data-effort="9.0" type="button">
+                  <span class="preset-name">3. Asfixia</span>
+                  <span class="mono preset-val">x = 9.0</span>
+                </button>
               </div>
             </div>
-          </div>
+          </section>
 
-          <!-- Presets de Casos de Estudio del Paper -->
-          <div class="presets-section">
-            <span class="presets-label">Casos de Estudio del Paper</span>
-            <div class="presets-grid">
-              <button class="preset-btn" data-effort="1.0">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span class="preset-dot dot-neglect"></span>
-                  <span>Caso 1: La Negligencia (Abandono)</span>
-                </div>
-                <span class="mono" style="color: var(--text-muted);">x = 1.0</span>
-              </button>
-              <button class="preset-btn active" data-effort="4.0">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span class="preset-dot dot-optimal"></span>
-                  <span>Caso 2: El Equilibrio (Óptimo)</span>
-                </div>
-                <span class="mono" style="color: #6ee7b7;">x = 4.0</span>
-              </button>
-              <button class="preset-btn" data-effort="9.0">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span class="preset-dot dot-collapse"></span>
-                  <span>Caso 3: La Saturación (Asfixia)</span>
-                </div>
-                <span class="mono" style="color: #fda4af;">x = 9.0</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Desglose Analítico de los 4 Sumandos en Tiempo Real -->
-          <div class="terms-breakdown">
-            <span class="presets-label">Desglose de Fuerzas de la Ecuación</span>
-
-            <!-- Sumando 1: Carencia -->
-            <div class="term-box carencia">
-              <div class="term-label">
-                <span class="term-name">Término de Carencia</span>
-                <span class="term-latex" data-latex="\frac{25}{x + 1}"></span>
-              </div>
-              <span class="term-val mono text-accent" id="term-val-carencia">5.000</span>
-            </div>
-
-            <!-- Sumando 2: Saturación -->
-            <div class="term-box saturacion">
-              <div class="term-label">
-                <span class="term-name">Término de Saturación (Hooke)</span>
-                <span class="term-latex" data-latex="x"></span>
-              </div>
-              <span class="term-val mono" style="color: #818cf8;" id="term-val-saturacion">4.00</span>
-            </div>
-
-            <!-- Sumando 3: Fricción -->
-            <div class="term-box friccion">
-              <div class="term-label">
-                <span class="term-name">Fricción Cotidiana</span>
-                <span class="term-latex" data-latex="\frac{1}{2}\sin(\pi x)"></span>
-              </div>
-              <span class="term-val mono" style="color: #a78bfa;" id="term-val-friccion">0.000</span>
-            </div>
-
-            <!-- Sumando 4: Heaviside -->
-            <div class="term-box heaviside">
-              <div class="term-label">
-                <span class="term-name">Falla Estructural (Heaviside)</span>
-                <span class="term-latex" data-latex="5\mathcal{H}(x - 8)"></span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span class="heaviside-switch off" id="heaviside-switch-indicator">APAGADO (0.0)</span>
-                <span class="term-val mono" style="color: #f43f5e;" id="term-val-heaviside">0.0</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- COLUMNA 2: VISUALIZADOR GRÁFICO CIENTÍFICO CANVAS -->
-        <section class="panel-card" aria-label="Gráfica de la Función de Estado">
-          <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M19 9l-5 5-4-4-3 3"/></svg>
-              <span>Visualizador de Dinámica Relacional</span>
-            </h2>
-            <div class="card-subtitle">
-              <span data-latex="V(x) = \frac{25}{x+1} + x + \frac{1}{2}\sin(\pi x) + 5\mathcal{H}(x-8)"></span>
-            </div>
-          </div>
-
-          <!-- Barra de Herramientas & Filtro de Capas -->
-          <div class="chart-toolbar">
-            <div class="layer-toggles">
-              <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Capas:</span>
-              <button class="layer-pill" data-layer="carencia" title="Ver curva de Carencia">
-                <span class="layer-indicator ind-carencia"></span>
-                <span>Carencia</span>
-              </button>
-              <button class="layer-pill" data-layer="saturacion" title="Ver recta de Saturación">
-                <span class="layer-indicator ind-saturacion"></span>
-                <span>Saturación</span>
-              </button>
-              <button class="layer-pill" data-layer="friccion" title="Ver ciclo de Fricción">
-                <span class="layer-indicator ind-friccion"></span>
-                <span>Fricción</span>
-              </button>
-              <button class="layer-pill" data-layer="heaviside" title="Ver escalón de Heaviside">
-                <span class="layer-indicator ind-heaviside"></span>
-                <span>Heaviside</span>
-              </button>
-            </div>
-            <span style="font-size: 0.72rem; color: var(--text-muted);">Nodo: Punto actual del usuario</span>
-          </div>
-
-          <!-- Lienzo Gráfico Interactivo -->
-          <div class="chart-viewport">
-            <canvas id="state-chart-canvas" class="chart-canvas"></canvas>
-          </div>
-
-          <!-- Leyenda de Zonas de Calibración Inferior -->
-          <div class="zone-legend-bar">
-            <div class="zone-legend-item neglect">
-              <span class="zone-item-title">Colapso por Negligencia</span>
-              <span class="zone-item-range mono">x ∈ [0, 1.5)</span>
-            </div>
-            <div class="zone-legend-item optimal">
-              <span class="zone-item-title">Equilibrio Elástico</span>
-              <span class="zone-item-range mono">x ∈ [1.5, 7.5]</span>
-            </div>
-            <div class="zone-legend-item fatigue">
-              <span class="zone-item-title">Fatiga por Sobreesfuerzo</span>
-              <span class="zone-item-range mono">x ∈ (7.5, 8.0)</span>
-            </div>
-            <div class="zone-legend-item collapse">
-              <span class="zone-item-title">Asfixia / Heaviside</span>
-              <span class="zone-item-range mono">x ≥ 8.0 (+5 salto)</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- COLUMNA 3: DIAGNÓSTICO DEL VÍNCULO & TELEMETRÍA -->
-        <section class="panel-card" aria-label="Diagnóstico y Resultados">
-          <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              <span>Telemetría & Diagnóstico</span>
-            </h2>
-            <span class="card-subtitle">Lectura clínica del vínculo</span>
-          </div>
-
-          <div class="telemetry-container">
-            <!-- Velocímetro / Cifra de Velocidad de Sustitución -->
-            <div class="velocity-hero optimal" id="velocity-hero-box">
-              <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Velocidad de Ruptura V(x)</span>
-              <div class="velocity-value" id="velocity-value">9.00</div>
-              <span class="velocity-unit">unidades cinéticas de deterioro</span>
-              <div class="status-badge badge-optimal" id="status-badge">Zona de Equilibrio Elástico (Óptimo)</div>
-            </div>
-
-            <!-- Alerta Crítica si Heaviside está activo -->
-            <div id="heaviside-critical-alert" style="display: none; padding: 0.65rem 0.85rem; background: var(--zone-collapse-bg); border: 1px solid var(--zone-collapse-border); border-radius: var(--radius-md); font-size: 0.8rem; color: #fda4af; align-items: center; gap: 0.5rem;">
-              <svg class="icon-svg" style="color: #f43f5e; width: 20px; height: 20px;" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <div>
-                <strong>Límite de Fluencia Cruzado:</strong> Se activó el escalón irreversible de Heaviside sumando +5 unidades por asfixia.
-              </div>
-            </div>
-
-            <!-- Diagnóstico del Vínculo según el Paper -->
-            <div class="dossier-box">
-              <div class="dossier-header">
-                <svg class="icon-svg icon-sm" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          <!-- 2. Diagnóstico & Telemetría -->
+          <section class="panel-card" aria-label="Telemetría y Diagnóstico">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                 <span>Diagnóstico del Vínculo</span>
-              </div>
+              </h2>
+              <div class="status-badge" id="status-badge">Zona de Equilibrio</div>
+            </div>
+
+            <div class="telemetry-hero" id="velocity-hero-box">
+              <span class="telemetry-label">Velocidad Instantánea de Deterioro V(x)</span>
+              <div class="velocity-value mono" id="velocity-value">9.00</div>
+              <span class="telemetry-sub">Unidades cinéticas de desgaste</span>
+            </div>
+
+            <!-- Alerta Discreta Heaviside -->
+            <div id="heaviside-critical-alert" class="heaviside-alert" style="display: none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span><strong>Umbral de Heaviside cruzado (x ≥ 8):</strong> Ruptura acelerada por asfixia (+5 unidades).</span>
+            </div>
+
+            <!-- Síntesis del Estado Clínico -->
+            <div class="dossier-box">
               <p class="dossier-body" id="diagnostic-bond-text">
-                La estructura goza de salud sistémica. El vínculo absorbe las fricciones diarias con máxima eficiencia y el riesgo de sustitución es técnicamente nulo.
+                La estructura goza de salud sistémica. El vínculo absorbe las fricciones diarias y el riesgo de ruptura es mínimo.
               </p>
             </div>
 
-            <!-- Significado del Esfuerzo Invertido -->
-            <div class="dossier-box">
-              <div class="dossier-header">
-                <svg class="icon-svg icon-sm" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
-                <span>Qué significa dar esta porción</span>
-              </div>
-              <p class="dossier-body" id="diagnostic-effort-text">
-                Dar la porción justa y equilibrada. Representa presencia activa, atención constante pero respetuosa del espacio ajeno, cuidado mutuo y gestión flexible de los problemas cotidianos.
-              </p>
+            <div class="dossier-meta">
+              <span class="dossier-meta-title">Significado:</span>
+              <span id="diagnostic-effort-text">Porción equilibrada. Atención constante que respeta la autonomía del otro.</span>
+            </div>
+          </section>
+
+          <!-- 3. Desglose de Fuerzas (Colapsable / Limpio) -->
+          <section class="panel-card" aria-label="Desglose de la Ecuación">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>Fuerzas de la Ecuación</span>
+              </h2>
+              <span class="card-subtitle mono">V(x) = Sumandos</span>
             </div>
 
-            <!-- Estado Mecánico del Sistema -->
-            <div class="dossier-box">
-              <div class="dossier-header">
-                <svg class="icon-svg icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Estado Mecánico del Sistema</span>
+            <div class="terms-grid">
+              <div class="term-item">
+                <div class="term-info">
+                  <span class="term-name">1. Carencia</span>
+                  <span class="term-formula" data-latex="\frac{25}{x+1}"></span>
+                </div>
+                <span class="term-val mono" id="term-val-carencia">5.00</span>
               </div>
-              <p class="dossier-body" id="diagnostic-system-text">
-                El riesgo de sustitución es el más bajo posible. La estructura se mantiene cohesionada y absorbe de manera flexible las fricciones diarias.
-              </p>
+
+              <div class="term-item">
+                <div class="term-info">
+                  <span class="term-name">2. Saturación</span>
+                  <span class="term-formula" data-latex="x"></span>
+                </div>
+                <span class="term-val mono" id="term-val-saturacion">4.00</span>
+              </div>
+
+              <div class="term-item">
+                <div class="term-info">
+                  <span class="term-name">3. Fricción</span>
+                  <span class="term-formula" data-latex="\frac{1}{2}\sin(\pi x)"></span>
+                </div>
+                <span class="term-val mono" id="term-val-friccion">0.00</span>
+              </div>
+
+              <div class="term-item">
+                <div class="term-info">
+                  <span class="term-name">4. Heaviside</span>
+                  <span class="term-formula" data-latex="5\mathcal{H}(x-8)"></span>
+                </div>
+                <div class="term-heaviside-wrap">
+                  <span class="heaviside-switch off" id="heaviside-switch-indicator">0.0</span>
+                  <span class="term-val mono" id="term-val-heaviside" style="display:none;">0.0</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: LIENZO GRÁFICO CIENTÍFICO CANVAS -->
+        <div class="calc-main-column">
+          <section class="panel-card chart-card" aria-label="Visualizador Gráfico">
+            <div class="card-header chart-header">
+              <div>
+                <h2 class="card-title">
+                  <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M19 9l-5 5-4-4-3 3"/></svg>
+                  <span>Curva de Estado V(x)</span>
+                </h2>
+                <div class="card-formula">
+                  <span data-latex="V(x) = \frac{25}{x+1} + x + \frac{1}{2}\sin(\pi x) + 5\mathcal{H}(x-8)"></span>
+                </div>
+              </div>
+
+              <!-- Capas Auxiliares -->
+              <div class="layer-toggles">
+                <span class="layer-label">Capas:</span>
+                <button class="layer-pill" data-layer="carencia" type="button" title="Ver Carencia">Carencia</button>
+                <button class="layer-pill" data-layer="saturacion" type="button" title="Ver Saturación">Saturación</button>
+                <button class="layer-pill" data-layer="friccion" type="button" title="Ver Fricción">Fricción</button>
+                <button class="layer-pill" data-layer="heaviside" type="button" title="Ver Heaviside">Heaviside</button>
+              </div>
+            </div>
+
+            <!-- Viewport del Canvas (Con soporte touch y arrastre de nodo) -->
+            <div class="chart-viewport" id="chart-viewport-velocity">
+              <canvas id="state-chart-canvas" class="chart-canvas"></canvas>
+            </div>
+
+            <!-- Leyenda Limpia de las 4 Zonas -->
+            <div class="zone-legend-bar">
+              <div class="zone-legend-item" data-zone="neglect">
+                <span class="zone-item-title">1. Negligencia</span>
+                <span class="zone-item-range mono">x ∈ [0, 1.5)</span>
+              </div>
+              <div class="zone-legend-item active-zone" data-zone="optimal">
+                <span class="zone-item-title">2. Equilibrio</span>
+                <span class="zone-item-range mono">x ∈ [1.5, 7.5]</span>
+              </div>
+              <div class="zone-legend-item" data-zone="fatigue">
+                <span class="zone-item-title">3. Fatiga</span>
+                <span class="zone-item-range mono">x ∈ (7.5, 8.0)</span>
+              </div>
+              <div class="zone-legend-item" data-zone="collapse">
+                <span class="zone-item-title">4. Asfixia</span>
+                <span class="zone-item-range mono">x ≥ 8.0</span>
+              </div>
+            </div>
+
+            <p class="chart-hint">
+              💡 <em>Puedes arrastrar el punto directamente sobre el gráfico o mover el control para explorar el estado.</em>
+            </p>
+          </section>
+
+          <!-- Referencia Breve de Ejes -->
+          <div class="axes-mini-guide">
+            <div class="axis-guide-item">
+              <strong>Eje X (Esfuerzo):</strong> Nivel de atención, tiempo y energía invertidos en el vínculo (0 = desatención absoluta, 10 = control total).
+            </div>
+            <div class="axis-guide-item">
+              <strong>Eje Y (Velocidad V):</strong> Tasa de deterioro o probabilidad de reemplazo. <em>A menor valor, mayor estabilidad.</em>
             </div>
           </div>
-        </section>
+        </div>
 
       </div>
-
-      <!-- ====================================================================
-           GUÍA DIDÁCTICA DE VARIABLES DE ESTADO & MINI-MATRIZ CONTEXTUAL
-           ==================================================================== -->
-      <section class="variables-guide-card" aria-label="Guía de Variables X e Y" style="margin-top: 1.25rem;">
-        <div class="card-header">
-          <h2 class="card-title">
-            <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            <span>¿Qué significan las variables X e Y en este modelo?</span>
-          </h2>
-          <span class="card-subtitle">Interpretación Física y Afectiva de los Ejes</span>
-        </div>
-
-        <div class="var-explain-grid">
-          <!-- Eje X: Esfuerzo -->
-          <div class="var-box var-x">
-            <div class="var-header">
-              <div class="var-title">
-                <svg class="icon-svg icon-md text-accent" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                <span>Eje Horizontal: Variable X (Esfuerzo / Atención)</span>
-              </div>
-              <span class="var-pill x-pill">Actual: x = <span id="var-x-live-val">4.00</span></span>
-            </div>
-            <p class="var-desc">
-              Representa la <strong>magnitud de energía, atención, tiempo y presencia</strong> que un individuo invierte en el vínculo afectivo. Varía de <strong>0.0 a 10.0</strong>:
-            </p>
-            <div class="var-scale-bar">
-              <div class="var-scale-row"><span style="color: #fcd34d;">• x ∈ [0, 1.5):</span> <span>Negligencia (Abandono, desatención crítica)</span></div>
-              <div class="var-scale-row"><span style="color: #6ee7b7;">• x ∈ [1.5, 7.5]:</span> <span>Equilibrio Elástico (Óptimo absoluto en x = 4.0)</span></div>
-              <div class="var-scale-row"><span style="color: #fdba74;">• x ∈ (7.5, 8.0):</span> <span>Fatiga (Hipervigilancia, pérdida de autonomía)</span></div>
-              <div class="var-scale-row"><span style="color: #fda4af;">• x ≥ 8.0:</span> <span>Asfixia Crítica (Invasión del espacio vital)</span></div>
-            </div>
-          </div>
-
-          <!-- Eje Y: Velocidad V(x) -->
-          <div class="var-box var-y">
-            <div class="var-header">
-              <div class="var-title">
-                <svg class="icon-svg icon-md" style="color: #818cf8;" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-                <span>Eje Vertical: Variable Y = V(x) (Velocidad de Ruptura)</span>
-              </div>
-              <span class="var-pill y-pill">Actual: V = <span id="var-y-live-val">9.00</span></span>
-            </div>
-            <p class="var-desc">
-              Mide la <strong>rapidez cinética instantánea de deterioro o probabilidad de sustitución</strong> de la pareja. <strong>A menor valor de V(x), mayor estabilidad y duración del vínculo</strong>:
-            </p>
-            <div class="var-scale-bar">
-              <div class="var-scale-row"><span style="color: #6ee7b7;">• V = 9.00 (Mínimo absoluto):</span> <span>Desgaste inercial mínimo (Salud sistémica)</span></div>
-              <div class="var-scale-row"><span style="color: var(--accent-blue);">• V ∈ [9.0, 11.0]:</span> <span>Zona de tolerancia elástica estable</span></div>
-              <div class="var-scale-row"><span style="color: #fdba74;">• V > 12.0:</span> <span>Deterioro acelerado por inanición afectiva</span></div>
-              <div class="var-scale-row"><span style="color: #fda4af;">• V ≥ 15.8 (+5 Heaviside):</span> <span>Colapso violento por asfixia</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mini-Matriz Contextual "Estás Aquí" -->
-        <div class="mini-matrix-container">
-          <div class="mini-matrix-title">
-            <span>Matriz Rápida de Posición: Haz clic en cualquier fila para simularla en vivo</span>
-            <span class="interactive-hint"><svg class="icon-svg icon-xs" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Clickeable</span>
-          </div>
-          <table class="mini-matrix-table">
-            <thead>
-              <tr>
-                <th>Zona del Modelo</th>
-                <th>Esfuerzo (X)</th>
-                <th>Velocidad (Y)</th>
-                <th>Significado Práctico</th>
-                <th>Estado del Vínculo</th>
-                <th style="width: 120px;">Posición Actual</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="mini-matrix-row" data-zone="neglect" title="Clic para simular Caso 1: Negligencia">
-                <td><strong style="color: #fcd34d;">1. Negligencia</strong></td>
-                <td class="mono">x ∈ [0, 1.5)</td>
-                <td class="mono">12.14 a 25.0</td>
-                <td>Dar muy poco (Abandono)</td>
-                <td>Muerte por inanición energética</td>
-                <td class="active-pin-container"></td>
-              </tr>
-              <tr class="mini-matrix-row active-zone" data-zone="optimal" title="Clic para simular Caso 2: Equilibrio Óptimo">
-                <td><strong style="color: #6ee7b7;">2. Equilibrio</strong></td>
-                <td class="mono">x ∈ [1.5, 7.5]</td>
-                <td class="mono">9.0 a 11.0</td>
-                <td>Porción justa y respetuosa</td>
-                <td>Máxima estabilidad elástica</td>
-                <td class="active-pin-container"><span class="active-pin"><svg class="icon-svg icon-xs" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></svg> Estás aquí</span></td>
-              </tr>
-              <tr class="mini-matrix-row" data-zone="fatigue" title="Clic para simular Zona de Fatiga">
-                <td><strong style="color: #fdba74;">3. Fatiga</strong></td>
-                <td class="mono">x ∈ (7.5, 8.0)</td>
-                <td class="mono">11.0 a 15.8</td>
-                <td>Dar de más (Hipervigilancia)</td>
-                <td>Sobrecalentamiento estructural</td>
-                <td class="active-pin-container"></td>
-              </tr>
-              <tr class="mini-matrix-row" data-zone="collapse" title="Clic para simular Caso 3: Saturación">
-                <td><strong style="color: #fda4af;">4. Colapso Asfixia</strong></td>
-                <td class="mono">x ≥ 8.0</td>
-                <td class="mono">V(x) ≥ 15.8</td>
-                <td>Invasión y control excesivo</td>
-                <td>Fractura irreversible (+5 Heaviside)</td>
-                <td class="active-pin-container"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
     </main>
 
     <!-- ====================================================================
          PESTAÑA 2: ANÁLISIS DIFERENCIAL & ACELERACIÓN V'(x)
-         (Estructura: Izquierda controles, centro gráfica, derecha diagnóstico)
          ==================================================================== -->
     <section class="tab-panel" id="tab-derivative" aria-label="Análisis Diferencial">
-      <div class="calculator-grid">
+      <div class="two-column-layout">
 
-        <!-- COLUMNA 1: CONTROLES DE ENTRADA & CALCULADORA DE LA DERIVADA -->
-        <section class="panel-card" aria-label="Controles de Derivada">
+        <!-- Columna Izquierda: Parámetros y Derivada -->
+        <div class="panel-card">
           <div class="card-header">
             <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span>Análisis Diferencial: El Impulso y la Razón de Cambio</span>
+              <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Aceleración de Ruptura V'(x)</span>
             </h2>
-            <span class="card-subtitle">Página 8 y 9 del Paper</span>
+            <div class="number-input-wrap">
+              <input type="number" id="derivative-x-number" class="effort-number-input" min="0" max="9.99" step="0.05" value="4.00" aria-label="Valor x para derivada">
+            </div>
           </div>
 
-          <div style="display:flex; flex-direction:column; gap:0.75rem;">
-            <p>
-              La primera derivada <span data-latex="V'(x)"></span> representa la <strong>aceleración de la ruptura</strong> o razón de cambio instantánea. Evalúa cómo responde la estructura frente a cambios microscópicos en el esfuerzo.
-            </p>
+          <p class="section-intro">
+            La derivada evalúa cómo responde el vínculo ante un pequeño incremento de esfuerzo. Una tasa negativa indica que dar más ayuda; una tasa positiva indica que el esfuerzo satura.
+          </p>
 
-            <!-- Formula moved above the chart for clarity; left-side box removed to avoid overlap -->
-
-            <!-- Calculadora (izquierda) -->
-            <div class="control-group">
-              <div class="slider-wrapper">
-                <input type="range" id="derivative-x-slider" class="effort-slider" min="0" max="9.99" step="0.01" value="4.00" aria-label="Nivel de esfuerzo para derivada">
-              </div>
-
-              <div class="dual-input-row" style="margin-top:0.6rem; align-items:center; gap:0.6rem;">
-                <div style="display:flex; gap:0.5rem; align-items:center;">
-                  <span style="font-size:0.85rem; color:var(--text-secondary);">Evaluar en x =</span>
-                  <div class="number-input-wrap" style="width:110px;"><input type="number" id="derivative-x-number" class="effort-number-input" min="0" max="9.99" step="0.01" value="4.00" aria-label="Valor numérico para derivada"></div>
-                </div>
-                <button id="btn-eval-derivative" class="btn-outline" style="font-size:0.82rem;">Calcular V'(x)</button>
-              </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin-top:0.6rem;">
-              <div class="math-metric-card">
-                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted);">Aceleración Total V'(x)</span>
-                <div class="math-metric-value" id="derivative-current-val">-0.0000</div>
-                <span style="font-size: 0.75rem; color: var(--text-secondary);">En el esfuerzo seleccionado</span>
-              </div>
-              <div class="math-metric-card">
-                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted);">Tendencia Secular</span>
-                <div class="math-metric-value" style="color: var(--accent-blue);" id="derivative-secular-val">0.0000</div>
-                <span style="font-size: 0.72rem; color: var(--text-secondary);"><span data-latex="-\frac{25}{(x+1)^2} + 1"></span></span>
-              </div>
-              
-            </div>
-
+          <div class="control-group">
+            <input type="range" id="derivative-x-slider" class="effort-slider" min="0" max="9.99" step="0.05" value="4.00" aria-label="Control de esfuerzo derivada">
           </div>
-        </section>
 
-        <!-- COLUMNA 2: VISUALIZADOR GRÁFICO DEDICADO -->
-        <section class="panel-card" aria-label="Gráfica de la Derivada">
+          <div class="metrics-row">
+            <div class="math-metric-card">
+              <span class="metric-label">Aceleración Total V'(x)</span>
+              <div class="metric-value mono text-accent" id="derivative-current-val">0.0000</div>
+              <span class="metric-sub">Razón de cambio instantánea</span>
+            </div>
+            <div class="math-metric-card">
+              <span class="metric-label">Tendencia Secular</span>
+              <div class="metric-value mono" id="derivative-secular-val">0.0000</div>
+              <span class="metric-sub">Sin oscilación cotidiana</span>
+            </div>
+          </div>
+
+          <!-- Desglose de los Componentes Diferenciales -->
+          <div class="dossier-box" style="margin-top: 1rem;">
+            <div class="diff-term">
+              <strong>1. Disminución de Carencia:</strong>
+              <span data-latex="-\frac{25}{(x+1)^2}"></span>
+              <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.2rem;">En el origen, cada pequeño esfuerzo reduce drásticamente el abandono.</p>
+            </div>
+            <div class="diff-term" style="margin-top: 0.6rem;">
+              <strong>2. Tasa de Saturación Continua:</strong>
+              <span data-latex="+1"></span>
+              <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.2rem;">Cada unidad adicional de esfuerzo añade continuamente una unidad de fricción.</p>
+            </div>
+            <div class="diff-term" style="margin-top: 0.6rem;">
+              <strong>3. Impulso Singular Heaviside:</strong>
+              <span data-latex="5\delta(x-8)"></span>
+              <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.2rem;">Impulso de Dirac en x = 8: salto abrupto en la tasa de cambio.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Gráfica de V'(x) -->
+        <div class="panel-card chart-card">
           <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <span>Visualizador de la Aceleración V'(x)</span>
-            </h2>
-            <div class="card-subtitle">Inspecciona el signo de la pendiente y los impulsos singulares</div>
+            <div>
+              <h2 class="card-title">
+                <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span>Visualizador de la Pendiente V'(x)</span>
+              </h2>
+              <div class="card-formula">
+                <span data-latex="V'(x) = -\frac{25}{(x + 1)^2} + 1 + \frac{\pi}{2}\cos(\pi x) + 5\delta(x - 8)"></span>
+              </div>
+            </div>
           </div>
 
-          <div class="chart-viewport" style="height: 380px; margin-top: 0.5rem;">
-            <div class="card-subtitle" style="margin-bottom:0.5rem; font-size:0.9rem; color:var(--text-secondary);">
-              <span data-latex="V'(x) = -\frac{25}{(x + 1)^2} + 1 + \frac{\pi}{2}\cos(\pi x) + 5\delta(x - 8)" data-display="true"></span>
-            </div>
+          <div class="chart-viewport" style="height: 380px;">
             <canvas id="derivative-chart-canvas" class="chart-canvas"></canvas>
           </div>
-        </section>
-
-        <!-- COLUMNA 3: DESGLOSE Y EXPLICACIONES (DIAGNÓSTICO) -->
-        <section class="panel-card" aria-label="Desglose Diferencial">
-          <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              <span>Desglose Diferencial</span>
-            </h2>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.85rem;">
-            <div class="dossier-box">
-              <span class="dossier-highlight">Derivada de la Carencia</span>
-              <div data-latex="\frac{d}{dx}\left[\frac{25}{x+1}\right] = -\frac{25}{(x+1)^2}"></div>
-              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">Pendiente negativa pronunciada en el origen: cada unidad de esfuerzo inicial reduce drásticamente el riesgo de abandono.</p>
-            </div>
-
-            <div class="dossier-box">
-              <span class="dossier-highlight">Derivada de la Saturación</span>
-              <div data-latex="\frac{d}{dx}[x] = 1"></div>
-              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">Tasa constante de asfixia: cada esfuerzo extra añade proporcionalmente una unidad continua de tensión.</p>
-            </div>
-
-            <div class="dossier-box">
-              <span class="dossier-highlight">Derivada del Escalón (Dirac)</span>
-              <div data-latex="\frac{d}{dx}[5\mathcal{H}(x-8)] = 5\delta(x-8)"></div>
-              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">El impulso martillo: vale 0 en todo el dominio excepto en x = 8, donde tiende a infinito.</p>
-            </div>
-          </div>
-        </section>
+          <p class="chart-hint">💡 <em>Toca o arrastra sobre la gráfica para evaluar la derivada en cualquier punto.</em></p>
+        </div>
 
       </div>
     </section>
@@ -549,370 +392,201 @@
          PESTAÑA 3: ANÁLISIS INTEGRAL & DESGASTE ACUMULADO ΔD
          ==================================================================== -->
     <section class="tab-panel" id="tab-integral" aria-label="Análisis Integral">
-      <div style="display: grid; grid-template-columns: 1fr 380px; gap: 1.25rem;">
-        
+      <div class="two-column-layout">
+
+        <!-- Columna Izquierda: Controles y Límites -->
         <div class="panel-card">
           <div class="card-header">
             <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              <span>Análisis Integral: Memoria y Deuda Entrópica</span>
+              <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span>Desgaste Acumulado (Integral Definida)</span>
             </h2>
-            <span class="card-subtitle">Páginas 10 a 14 del Paper</span>
+            <div class="status-badge" id="integral-zone-badge">Reconstrucción</div>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <p>
-              Mientras que <span data-latex="V(x)"></span> mide el riesgo en un momento exacto, la <strong>integral definida</strong> calcula el <strong>desgaste acumulado total (<span data-latex="\Delta D"></span>)</strong> —el área bajo la curva— cuando un miembro transiciona de un estado <span data-latex="x_1"></span> a otro <span data-latex="x_2"></span>:
+          <p class="section-intro">
+            Calcula el área bajo la curva <span data-latex="\Delta D = \int_{x_1}^{x_2} V(x) dx"></span>. Representa la energía y deuda entrópica acumulada al transicionar de un nivel de esfuerzo <span data-latex="x_1"></span> a otro <span data-latex="x_2"></span>.
+          </p>
+
+          <div class="integral-controls-row">
+            <div class="integral-input-group">
+              <label for="integral-x1">Punto Inicial (<span data-latex="x_1"></span>):</label>
+              <input type="number" id="integral-x1" class="effort-number-input" min="0" max="9.9" step="0.5" value="1.0">
+            </div>
+            <div class="integral-input-group">
+              <label for="integral-x2">Punto Final (<span data-latex="x_2"></span>):</label>
+              <input type="number" id="integral-x2" class="effort-number-input" min="0" max="9.9" step="0.5" value="4.0">
+            </div>
+            <button id="btn-preset-integral-study" class="btn-outline" type="button">
+              Caso 1 → 4
+            </button>
+          </div>
+
+          <div class="metrics-row" style="margin-top: 1rem;">
+            <div class="math-metric-card">
+              <span class="metric-label">Desgaste Total ΔD</span>
+              <div class="metric-value mono text-accent" id="integral-result-delta-d">30.09 u</div>
+              <span class="metric-sub">Costo de transición del caso</span>
+            </div>
+            <div class="math-metric-card">
+              <span class="metric-label">Componente Secular</span>
+              <div class="metric-value mono" id="integral-result-full-d">30.41 u</div>
+              <span class="metric-sub">Sin término sinusoidal</span>
+            </div>
+          </div>
+
+          <div class="dossier-box" style="margin-top: 1rem;">
+            <span class="dossier-meta-title">Lectura del Desgaste:</span>
+            <p class="dossier-body" id="integral-interpretation-text">
+              Refleja el precio de la reparación. Sanar un vínculo dañado exige procesar el daño previo antes de estabilizarse en el óptimo.
             </p>
-
-            <div style="background: var(--bg-abyssal); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--glass-border); text-align: center;">
-              <div data-latex="\Delta D = \int_{x_1}^{x_2} V(x) dx = \left[ 25\ln(x + 1) + \frac{1}{2}x^2 - \frac{1}{2\pi}\cos(\pi x) + 5(x - 8)\mathcal{H}(x - 8) \right]_{x_1}^{x_2}" data-display="true"></div>
-            </div>
-
-            <!-- Controles de Límites de Integración x1 y x2 -->
-            <div class="integral-controls-row">
-              <div class="integral-input-group">
-                <label for="integral-x1">Estado Inicial (<span data-latex="x_1"></span>):</label>
-                <input type="number" id="integral-x1" class="integral-field" min="0" max="9.9" step="0.5" value="1.0">
-              </div>
-              <div class="integral-input-group">
-                <label for="integral-x2">Estado Final (<span data-latex="x_2"></span>):</label>
-                <input type="number" id="integral-x2" class="integral-field" min="0" max="9.9" step="0.5" value="4.0">
-              </div>
-              <button id="btn-preset-integral-study" class="btn-outline" style="font-size: 0.78rem;">
-                <svg class="icon-svg icon-xs" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                <span>Cargar Caso del Paper (1 → 4)</span>
-              </button>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-              <div class="math-metric-card">
-                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted);">Desgaste Total ΔD (Paper)</span>
-                <div class="math-metric-value text-accent" id="integral-result-delta-d">30.09 unidades</div>
-                <span style="font-size: 0.72rem; color: var(--text-secondary);"><span data-latex="7.5 + 25\ln(2.5) - \frac{1}{\pi} \approx 30.09"></span> (Caso 1 → 4)</span>
-              </div>
-              <div class="math-metric-card">
-                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted);">Componente Secular</span>
-                <div class="math-metric-value" style="color: #a78bfa;" id="integral-result-full-d">30.41 u (secular)</div>
-                <span style="font-size: 0.72rem; color: var(--text-secondary);">Sin oscilación periódica</span>
-              </div>
-            </div>
-
-            <!-- Visor Gráfico Canvas Dedicado para la Integral (Área Sombreada) -->
-            <div class="chart-viewport" style="height: 340px; margin-top: 0.5rem;">
-              <div class="card-subtitle" style="margin-bottom:0.4rem; font-size:0.92rem; color:var(--text-secondary);">
-                <span data-latex="V(x) = \frac{25}{x+1} + x + \frac{1}{2}\sin(\pi x) + 5\mathcal{H}(x-8)" data-display="true"></span>
-              </div>
-              <canvas id="integral-chart-canvas" class="chart-canvas"></canvas>
-            </div>
-
-            <div class="dossier-box">
-              <div class="dossier-header">
-                <svg class="icon-svg icon-sm" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                <span>Interpretación de la Transición Afectiva</span>
-              </div>
-              <p class="dossier-body" id="integral-interpretation-text">
-                Refleja el precio de la reparación. Demuestra que sanar un vínculo dañado exige que la estructura procese el pasado y soporte una adaptación transitoria antes de alcanzar la estabilidad.
-              </p>
-            </div>
           </div>
         </div>
 
-        <div class="panel-card">
+        <!-- Columna Derecha: Gráfico de Integral con Área Sombreada -->
+        <div class="panel-card chart-card">
           <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              <span>Escala de Deuda Entrópica</span>
-            </h2>
-            <span class="status-badge badge-optimal" id="integral-zone-badge">Zona de Reconstrucción</span>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.82rem;">
-            <div class="dossier-box" style="border-left: 3px solid var(--zone-optimal-bright);">
-              <strong style="color: #6ee7b7;">ΔD ∈ [1, 10]: Ajuste Menor y Estabilidad Óptima</strong>
-              <p style="color: var(--text-secondary); font-size: 0.78rem;">
-                Costo de transición mínimo. La relación opera dentro de los márgenes del equilibrio elástico.
-              </p>
-            </div>
-
-            <div class="dossier-box" style="border-left: 3px solid var(--accent-blue);">
-              <strong style="color: var(--accent-blue);">ΔD ∈ (10, 35]: Reconstrucción y Fricción Moderada</strong>
-              <p style="color: var(--text-secondary); font-size: 0.78rem;">
-                Precio de la reparación (Caso del paper: 30.09 u). Sanar exige procesar el daño previo.
-              </p>
-            </div>
-
-            <div class="dossier-box" style="border-left: 3px solid var(--zone-fatigue);">
-              <strong style="color: #fdba74;">ΔD ∈ (35, 60]: Fatiga Crítica y Sobrecarga</strong>
-              <p style="color: var(--text-secondary); font-size: 0.78rem;">
-                Vínculo sobrecalentado por control y vigilancia constante, perdiendo su elasticidad natural.
-              </p>
-            </div>
-
-            <div class="dossier-box" style="border-left: 3px solid var(--zone-collapse-bright);">
-              <strong style="color: #fda4af;">ΔD > 60: Colapso Irreversible y Castigo Estructural</strong>
-              <p style="color: var(--text-secondary); font-size: 0.78rem;">
-                Asfixia profunda y daño permanente acumulado; la ruptura es inevitable.
-              </p>
+            <div>
+              <h2 class="card-title">
+                <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M19 9l-5 5-4-4-3 3"/></svg>
+                <span>Área Bajo la Curva ΔD</span>
+              </h2>
+              <div class="card-formula">
+                <span data-latex="\Delta D = \left[ 25\ln(x + 1) + \frac{1}{2}x^2 - \frac{1}{2\pi}\cos(\pi x) + 5(x - 8)\mathcal{H}(x - 8) \right]_{x_1}^{x_2}"></span>
+              </div>
             </div>
           </div>
+
+          <div class="chart-viewport" style="height: 380px;">
+            <canvas id="integral-chart-canvas" class="chart-canvas"></canvas>
+          </div>
+          <p class="chart-hint">💡 <em>Puedes arrastrar los límites de integración directamente en el lienzo.</em></p>
         </div>
 
       </div>
     </section>
 
     <!-- ====================================================================
-         PESTAÑA 4: MATRIZ DE CALIBRACIÓN & TABLAS COMPLETAS DEL PAPER
+         PESTAÑA 4: FUNDAMENTOS DEL PAPER & AUTOR
          ==================================================================== -->
-    <section class="tab-panel" id="tab-matrix" aria-label="Tablas de Calibración">
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        
-        <!-- TABLA 1: CALIBRACIÓN POR ESFUERZO Y VELOCIDAD -->
+    <section class="tab-panel" id="tab-paper" aria-label="Fundamentos y Autor">
+      <div class="two-column-layout">
+
+        <!-- Columna Izquierda: Perfil y Paper -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          
+          <!-- Tarjeta de Autor -->
+          <div class="panel-card">
+            <div class="author-profile-compact">
+              <div class="author-avatar-fallback large">JP</div>
+              <div class="author-details">
+                <h2>Jan Pier Molina Castaño</h2>
+                <span class="author-institution">Facultad de Ingeniería • Ingeniería Mecánica</span>
+                <span class="text-muted" style="font-size: 0.8rem;">Universidad de La Guajira (2026)</span>
+                <p class="author-bio">
+                  Autor de la investigación que modela la dinámica relacional mediante ecuaciones diferenciales de estado, la Ley de Hooke y límites de fluencia de Heaviside.
+                </p>
+                <div class="author-links">
+                  <a href="https://www.instagram.com/jean.pieerr/" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4z"/></svg>
+                    <span>Instagram @jean.pieerr</span>
+                  </a>
+                  <a href="https://zenodo.org/records/22656086" target="_blank" rel="noopener noreferrer" class="btn-outline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                    <span>Ver Paper en Zenodo</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Los 4 Pilares Físicos del Modelo -->
+          <div class="panel-card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span>Fundamento Físico de la Ecuación</span>
+              </h2>
+            </div>
+            <div class="pillars-list">
+              <div class="pillar-item">
+                <strong>1. Carencia (<span data-latex="\frac{25}{x+1}"></span>):</strong> La desatención inicial dispara el riesgo a 25. Cada unidad inicial de cuidado reduce drásticamente el peligro.
+              </div>
+              <div class="pillar-item">
+                <strong>2. Saturación (<span data-latex="x"></span>):</strong> Análoga a la Ley de Hooke. El exceso de esfuerzo genera tensión mecánica acumulada.
+              </div>
+              <div class="pillar-item">
+                <strong>3. Fricción (<span data-latex="\frac{1}{2}\sin(\pi x)"></span>):</strong> Modela las fluctuaciones cotidianas de la convivencia.
+              </div>
+              <div class="pillar-item">
+                <strong>4. Falla Estructural (<span data-latex="5\mathcal{H}(x-8)"></span>):</strong> Salto irreversible de Heaviside en <span data-latex="x = 8"></span>. La asfixia destruye el vínculo por sobrecarga.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna Derecha: Tarjetas Interactivas de las 4 Zonas -->
         <div class="panel-card">
           <div class="card-header">
             <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
-              <span>Tabla 1: Calibración y Significado del Esfuerzo (x) y Velocidad V(x)</span>
+              <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+              <span>Zonas de Calibración (Toca para simular)</span>
             </h2>
-            <span class="card-subtitle">Páginas 4, 5 y 7 del Paper Oficial • Clickeable para simular</span>
           </div>
 
-          <div class="table-container">
-            <table class="calibration-table">
-              <thead>
-                <tr>
-                  <th>Zona del Sistema</th>
-                  <th>Variables de Estado (X e Y)</th>
-                  <th>Significado Vivencial ("Dar esta porción")</th>
-                  <th>Diagnóstico Clínico del Vínculo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="calibration-row" data-zone="neglect" title="Haz clic para cargar este caso en el simulador">
-                  <td>
-                    <strong style="color: #fcd34d;">1. Zona de Colapso por Negligencia</strong>
-                  </td>
-                  <td class="mono">
-                    <strong>Esfuerzo (X):</strong> x ∈ [0, 1.5)<br>
-                    <strong>Velocidad (Y):</strong> 12.14 a 25.0<br>
-                    <span style="color: var(--text-muted); font-size: 0.75rem;">Ej: x = 1.0 → V = 13.5</span>
-                  </td>
-                  <td>
-                    <strong>Dar muy poco (Abandono):</strong> Ignorar a la pareja, ausencia total de comunicación, no destinar tiempo compartido y desatender por completo los acuerdos afectivos.
-                  </td>
-                  <td>
-                    <strong>Fracaso acelerado:</strong> La relación está muriendo por inanición energética. El costo de mantenerla sin atención activa es insostenible y el reemplazo es inminente.
-                  </td>
-                </tr>
+          <div class="zones-interactive-list">
+            <!-- Zona 1 -->
+            <button class="zone-card-btn calibration-row" data-zone="neglect" type="button">
+              <div class="zone-card-header">
+                <strong>1. Negligencia</strong>
+                <span class="mono">x ∈ [0, 1.5)</span>
+              </div>
+              <p class="zone-card-desc">Dar muy poco. La relación muere por inanición afectiva y desinterés.</p>
+              <div class="zone-card-footer">
+                <span class="mono text-muted">Ejemplo: x = 1.0 → V = 13.5</span>
+                <span class="tap-hint">Simular →</span>
+              </div>
+            </button>
 
-                <tr class="calibration-row active-row" data-zone="optimal" title="Haz clic para cargar este caso en el simulador">
-                  <td>
-                    <strong style="color: #6ee7b7;">2. Zona de Equilibrio Elástico (Óptimo)</strong>
-                  </td>
-                  <td class="mono">
-                    <strong>Esfuerzo (X):</strong> x ∈ [1.5, 7.5]<br>
-                    <strong>Velocidad (Y):</strong> 9.0 a 11.0<br>
-                    <span style="color: #6ee7b7; font-size: 0.75rem;">Ideal: x = 4.0 → V = 9.0</span>
-                  </td>
-                  <td>
-                    <strong>Dar la porción justa:</strong> Presencia activa, atención constante pero respetuosa del espacio ajeno, cuidado mutuo y gestión flexible de los problemas cotidianos.
-                  </td>
-                  <td>
-                    <strong>Máxima estabilidad:</strong> La estructura goza de salud sistémica. El vínculo absorbe las fricciones diarias con máxima eficiencia y el riesgo de sustitución es técnicamente nulo.
-                  </td>
-                </tr>
+            <!-- Zona 2 -->
+            <button class="zone-card-btn calibration-row active-zone" data-zone="optimal" type="button">
+              <div class="zone-card-header">
+                <strong>2. Equilibrio Óptimo</strong>
+                <span class="mono">x ∈ [1.5, 7.5]</span>
+              </div>
+              <p class="zone-card-desc">La porción justa. Presencia atenta que respeta el espacio y autonomía del otro.</p>
+              <div class="zone-card-footer">
+                <span class="mono text-accent">Ideal: x = 4.0 → V = 9.0</span>
+                <span class="tap-hint">Simular →</span>
+              </div>
+            </button>
 
-                <tr class="calibration-row" data-zone="fatigue" title="Haz clic para cargar este caso en el simulador">
-                  <td>
-                    <strong style="color: #fdba74;">3. Zona de Fatiga por Sobreinversión</strong>
-                  </td>
-                  <td class="mono">
-                    <strong>Esfuerzo (X):</strong> x ∈ (7.5, 8.0)<br>
-                    <strong>Velocidad (Y):</strong> 11.0 a 15.8<br>
-                    <span style="color: var(--text-muted); font-size: 0.75rem;">Ej: x = 7.8 → V ≈ 11.5</span>
-                  </td>
-                  <td>
-                    <strong>Dar de más (Tensión Previa):</strong> Sofocar a la pareja, hipervigilancia, llamadas excesivas, demanda de validación constante y pérdida de la propia autonomía.
-                  </td>
-                  <td>
-                    <strong>Desgaste acumulado:</strong> La relación está sobrecalentada. Aunque no se ha roto del todo, la presión interna acelera la fatiga del material afectivo antes de fracturarse.
-                  </td>
-                </tr>
+            <!-- Zona 3 -->
+            <button class="zone-card-btn calibration-row" data-zone="fatigue" type="button">
+              <div class="zone-card-header">
+                <strong>3. Fatiga</strong>
+                <span class="mono">x ∈ (7.5, 8.0)</span>
+              </div>
+              <p class="zone-card-desc">Dar de más. Hipervigilancia y demanda de validación constante que fatiga la estructura.</p>
+              <div class="zone-card-footer">
+                <span class="mono text-muted">Ejemplo: x = 7.8 → V ≈ 11.5</span>
+                <span class="tap-hint">Simular →</span>
+              </div>
+            </button>
 
-                <tr class="calibration-row" data-zone="collapse" title="Haz clic para cargar este caso en el simulador">
-                  <td>
-                    <strong style="color: #fda4af;">4. Zona de Colapso Estructural por Asfixia</strong>
-                  </td>
-                  <td class="mono">
-                    <strong>Esfuerzo (X):</strong> x ≥ 8.0<br>
-                    <strong>Velocidad (Y):</strong> V(x) ≥ 15.8<br>
-                    <span style="color: #fda4af; font-size: 0.75rem;">Ej: x = 9.0 → V = 16.5</span>
-                  </td>
-                  <td>
-                    <strong>Dar en exceso extremo (Invasión Crítica):</strong> Acoso, control absoluto, invasión de la privacidad e incapacidad de dejar respirar al otro.
-                  </td>
-                  <td>
-                    <strong>Colapso violento:</strong> Ruptura por exceso violento de tensión mecánica. El umbral crítico de Heaviside añade +5 unidades; la asfixia destruye más rápido que el abandono.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- TABLA 2: ESCALA DE DESGASTE ACUMULADO ΔD -->
-        <div class="panel-card">
-          <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              <span>Tabla 2: Escala de Interpretación Cuantitativa del Desgaste Acumulado (ΔD)</span>
-            </h2>
-            <span class="card-subtitle">Páginas 13 y 14 del Paper</span>
-          </div>
-
-          <div class="table-container">
-            <table class="calibration-table">
-              <thead>
-                <tr>
-                  <th>Rango ΔD</th>
-                  <th>Zona de Clasificación</th>
-                  <th>Significado Físico y Sistémico del Vínculo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="mono" style="color: #6ee7b7;">ΔD ∈ [1, 10]</td>
-                  <td><strong>Zona de Ajuste Menor y Estabilidad Óptima</strong></td>
-                  <td>El costo de transición es mínimo. La relación opera dentro de los márgenes del equilibrio elástico, absorbiendo las variaciones cotidianas sin deudas entrópicas significativas.</td>
-                </tr>
-                <tr>
-                  <td class="mono" style="color: var(--accent-blue);">ΔD ∈ (10, 35]</td>
-                  <td><strong>Zona de Reconstrucción y Fricción Moderada</strong></td>
-                  <td>Refleja el precio de la reparación (en este rango se ubica el caso de estudio de <strong>30.09 unidades</strong> para la transición x=1 a x=4). Sanar exige soportar una adaptación transitoria.</td>
-                </tr>
-                <tr>
-                  <td class="mono" style="color: #fdba74;">ΔD ∈ (35, 60]</td>
-                  <td><strong>Zona de Fatiga Crítica y Sobrecarga</strong></td>
-                  <td>Muestra un desgaste extremo por esfuerzo excesivo. La relación está sobrecalentada por el control y la vigilancia constante, perdiendo la capacidad de volver a la normalidad.</td>
-                </tr>
-                <tr>
-                  <td class="mono" style="color: #fda4af;">ΔD > 60</td>
-                  <td><strong>Zona de Colapso Irreversible y Castigo Estructural</strong></td>
-                  <td>El sistema atraviesa niveles de asfixia profunda, acumulando un daño permanente que destruye por completo las posibilidades de recuperación y hace inevitable la ruptura.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         PESTAÑA 5: PAPER COMPLETO, FUNDAMENTOS & PERFIL DEL AUTOR
-         ==================================================================== -->
-    <section class="tab-panel" id="tab-paper" aria-label="Paper y Autor">
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        
-        <!-- Tarjeta de Perfil del Autor -->
-        <div class="author-profile-card">
-            <div class="author-large-avatar-wrap">
-            <img id="author-card-avatar" class="author-large-avatar" src="assets/jean.png" alt="Jan Pier Molina Castaño" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="author-avatar-fallback" style="font-size: 2rem;">JP</div>
-            <!-- Upload control removed -->
-          </div>
-
-            <div class="author-details">
-            <h2>Jan Pier Molina Castaño</h2>
-            <div class="author-academic">Facultad de Ingeniería • Ingeniería Mecánica</div>
-            <div style="font-size: 0.82rem; color: var(--text-muted);">Universidad de La Guajira — Riohacha, La Guajira (2026)</div>
-            <p class="author-bio">
-              Investigador y autor del modelado matemático de dinámica de sistemas interpersonales, formalizando el desgaste afectivo mediante ecuaciones de estado diferencial, la Ley de Hooke, el límite de fluencia de Heaviside y la deuda entrópica acumulada.
-            </p>
-            <div class="author-actions">
-              <a href="https://www.instagram.com/jean.pieerr/" target="_blank" rel="noopener noreferrer" class="btn-primary">
-                <!-- Icono Instagram Blanco -->
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                <span>Instagram: @jean.pieerr</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Banner del Paper: destacado breve y enlace al PDF (editar href del enlace con la URL real) -->
-        <div class="paper-banner" style="margin-top:0.8rem;">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
-            <div style="flex:1;">
-              <strong style="display:block; font-size:1rem; color:var(--text-primary);">Paper & Resultados</strong>
-              <span style="color:var(--text-secondary);">Accede al paper completo para replicar las ecuaciones, pruebas y casos de estudio. ¡Descubre la metodología y resultados publicados!</span>
-            </div>
-            <div style="display:flex; gap:0.6rem;">
-              <a id="author-paper-link" href="https://zenodo.org/records/22656086" target="_blank" rel="noopener noreferrer" class="btn-primary">
-                <!-- Icono Documento -->
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-                <span>Leer Paper</span>
-              </a>
-              
-            </div>
-          </div>
-        </div>
-
-        <!-- Sinopsis del Paper -->
-        <div class="panel-card">
-          <div class="card-header">
-            <h2 class="card-title">
-              <svg class="icon-svg card-icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-              <span>Fundamentación Teórica del Modelo</span>
-            </h2>
-            <span class="card-subtitle">Extractos íntegros de la investigación</span>
-          </div>
-            <span class="card-subtitle">Extractos íntegros de la investigación</span>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 1.25rem; font-size: 0.92rem; line-height: 1.7;">
-            <div>
-              <h3 style="color: var(--accent-blue); margin-bottom: 0.35rem; font-size: 1rem;">1. Introducción y Pregunta de Partida</h3>
-              <p>
-                <em>"¿Es posible calcular el desgaste de un amor con la misma precisión con la que la termodinámica mide la fatiga de los materiales?"</em>
-                Aunque la intuición popular suele ver los vínculos afectivos como un territorio caótico e impredecible, este trabajo demuestra cómo el análisis matemático transforma las complejidades de la convivencia —desde el abandono y la rutina hasta la sobreinversión asfixiante— en una función de estado rigurosa.
-              </p>
-            </div>
-
-            <div>
-              <h3 style="color: var(--accent-blue); margin-bottom: 0.35rem; font-size: 1rem;">2. Los Cuatro Pilares Físicos de la Ecuación</h3>
-              <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
-                <li>
-                  <strong>Término de Carencia (<span data-latex="\frac{25}{x+1}"></span>):</strong> Modela la negligencia. Al tender el esfuerzo a cero, el deterioro arranca en un máximo inicial de 25. El denominador previene la singularidad en el origen.
-                </li>
-                <li>
-                  <strong>Término de Saturación (<span data-latex="x"></span>):</strong> Análoga a la Ley de Hooke. Demuestra que cada unidad desmedida de esfuerzo añade proporcionalmente asfixia y pérdida de autonomía.
-                </li>
-                <li>
-                  <strong>Fricción Cotidiana (<span data-latex="\frac{1}{2}\sin(\pi x)"></span>):</strong> Modela las fluctuaciones sinusoidales naturales de una relación de tamaño moderado.
-                </li>
-                <li>
-                  <strong>Falla Estructural (<span data-latex="5\mathcal{H}(x-8)"></span>):</strong> Utiliza el escalón de Heaviside. Modela el límite de fluencia mecánica en <span data-latex="x = 8"></span>, donde la estructura cede de golpe sumando +5 unidades.
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 style="color: var(--accent-blue); margin-bottom: 0.35rem; font-size: 1rem;">3. Conclusión de la Investigación</h3>
-              <p>
-                <em>"Las ecuaciones no pretenden reducir la complejidad de los sentimientos a un frío algoritmo, sino cartografiar con absoluta precisión el costo invisible que soportan los vínculos a lo largo del tiempo. La salud de un vínculo no depende de la ausencia absoluta de fricción, sino de la capacidad de operar dentro de su zona óptima (<span data-latex="x = 4"></span>), respetando la elasticidad del otro y evitando cruzar los umbrales fatídicos de la asfixia."</em>
-              </p>
-            </div>
-
-            <div style="border-top: 1px solid var(--glass-border); padding-top: 0.85rem;">
-              <h4 style="color: var(--text-secondary); font-size: 0.82rem; text-transform: uppercase; margin-bottom: 0.5rem;">Referencias Académicas Citadas en el Paper</h4>
-              <ul style="font-size: 0.78rem; color: var(--text-muted); list-style: none; display: flex; flex-direction: column; gap: 0.35rem;">
-                <li>• BlueDot. (2024). <em>¿Qué son las integrales definidas e indefinidas? El Teorema Fundamental del Cálculo</em>.</li>
-                <li>• Larson, R., & Edwards, B. (2015). <em>Cálculo, Tomo I</em>. Cengage Learning Editores.</li>
-                <li>• Stewart, J. <em>Cálculo de una variable: Trascendentes Tempranas</em> (7ma Ed.). Cengage Learning.</li>
-              </ul>
-            </div>
+            <!-- Zona 4 -->
+            <button class="zone-card-btn calibration-row" data-zone="collapse" type="button">
+              <div class="zone-card-header">
+                <strong>4. Colapso por Asfixia</strong>
+                <span class="mono">x ≥ 8.0</span>
+              </div>
+              <p class="zone-card-desc">Invasión total del espacio vital. Salto de Heaviside (+5 u) y fractura violenta.</p>
+              <div class="zone-card-footer">
+                <span class="mono text-muted">Ejemplo: x = 9.0 → V = 16.5</span>
+                <span class="tap-hint">Simular →</span>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -921,7 +595,7 @@
 
   </div>
 
-  <!-- Scripts Modulares en Orden de Dependencia -->
+  <!-- Scripts Modulares -->
   <script src="js/math-engine.js"></script>
   <script src="js/diagnostics.js"></script>
   <script src="js/latex-renderer.js"></script>

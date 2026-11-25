@@ -1,5 +1,6 @@
 /* ==========================================================================
    BASE & RESET STYLES - DINÁMICA DE SISTEMAS INTERPERSONALES
+   Estética Serena, Tipográfica y Libre de Fatiga Visual
    ========================================================================== */
 
 *, *::before, *::after {
@@ -17,17 +18,13 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-abyssal);
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.07), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(46, 125, 104, 0.05), transparent),
-    linear-gradient(180deg, var(--bg-abyssal) 0%, var(--bg-slate) 100%);
-  background-attachment: fixed;
+  background-color: var(--bg-base);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.55;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 /* --- Tipografía --- */
@@ -35,55 +32,61 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 
-h1 { font-size: 1.85rem; }
-h2 { font-size: 1.45rem; }
-h3 { font-size: 1.15rem; }
+h1 { font-size: 1.35rem; }
+h2 { font-size: 1.1rem; }
+h3 { font-size: 0.95rem; }
 
 p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 a {
-  color: var(--accent-blue);
+  color: var(--accent);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: #7dd3fc;
+  color: var(--accent-hover);
 }
 
 /* --- Layout Principal --- */
 .app-container {
-  max-width: 1440px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.25rem 1.5rem 3rem;
+  padding: 1.25rem 1rem 3rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
   flex: 1;
 }
 
-/* --- Scrollbar Estilizada y Fina --- */
+@media (max-width: 640px) {
+  .app-container {
+    padding: 0.75rem 0.75rem 2rem;
+    gap: 0.85rem;
+  }
+}
+
+/* --- Scrollbar Minimalista --- */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-abyssal);
+  background: var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-surface-elevated);
+  background: var(--border-subtle);
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -93,6 +96,7 @@ a:hover {
 /* --- Utilidades --- */
 .mono {
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .text-muted {
@@ -100,17 +104,9 @@ a:hover {
 }
 
 .text-accent {
-  color: var(--accent-blue);
+  color: var(--accent);
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+.text-secondary {
+  color: var(--text-secondary);
 }
